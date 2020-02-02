@@ -26,7 +26,7 @@ screen_size = (1280, 720)
 
 pygame.init()
 size = WIDTH, HEIGHT = screen_size
-screen = pygame.display.set_mode(size) #, pygame.FULLSCREEN)
+screen = pygame.display.set_mode(size)  #, pygame.FULLSCREEN)
 black = pygame.Color('black')
 screen.fill(black)
 
@@ -74,19 +74,21 @@ class TimeMachine:
 
     def set_reverse(self, n):
         """если n == True, то начинается перемещение в прошлое, иначе время начинает идти вперёд"""
-        self.past = n
-        self.timer.set_reverse(n)
-        if n:
-            self.trig = True
-            # в self.backup_objects записываются все текущие объекты,
-            # чтобы потом можно было вернуться в нормальное состояние
-            self.backup_objects = [[None for j in range(len(self.level[0]))] for i in range(len(self.level))]
-            for y in range(len(self.objects)):
-                for x in range(len(self.objects[0])):
-                    if self.objects[y][x]:
-                        self.backup_objects[y][x] = self.objects[y][x]
-                        if self.objects[y][x].get_name() != 'player':
-                            self.objects[y][x] = None
+        if (n and not self.is_past()) or (not n and self.is_past()):
+            print(123)
+            self.past = n
+            self.timer.set_reverse(n)
+            if n:
+                self.trig = True
+                # в self.backup_objects записываются все текущие объекты,
+                # чтобы потом можно было вернуться в нормальное состояние
+                self.backup_objects = [[None for j in range(len(self.level[0]))] for i in range(len(self.level))]
+                for y in range(len(self.objects)):
+                    for x in range(len(self.objects[0])):
+                        if self.objects[y][x]:
+                            self.backup_objects[y][x] = self.objects[y][x]
+                            if self.objects[y][x].get_name() != 'player':
+                                self.objects[y][x] = None
 
     def is_past(self):
         """возвращает true, если сейчас прошлое, false, если нстоящее"""
@@ -109,13 +111,13 @@ class TimeMachine:
                         self.trig2 = True
                     self.past_objects[j[1][1]][j[1][0]] = Tile(j[1][0], j[1][1], self.past_grp, self.all_grp,
                                                                self.tile_size[0], self.tile_size[1],
-                                                               names[j[0][0]], j[0][2], 1)
+                                                               names[j[0][0]], j[0][2], 1, deg=j[0][3])
                     # игроку нельзя сталкиваться с чем-либо в прошлом, поэтому, если координаты игрока совпадают с
                     # координатами объекта, который записывается в self.past_objects, функция возвращает False,
                     # после чего игрок умирает и уровень презапускается
                     if self.player.get_coords() == (j[1][0], j[1][1]) and self.trig2:
                         return False
-                    self.past_objects[j[1][1]][j[1][0]].set_image(j[0][1])
+                    self.past_objects[j[1][1]][j[1][0]].set_image(j[0][1], deg=j[0][3])
         else:  # если сейчас не прошлое
             self.trig2 = False
             for y in range(len(self.past_objects)):  # очистка self.past_objects
@@ -289,7 +291,114 @@ class GameLevel:
         with open(self.filename, 'r') as mapFile:
             level_map = [line.strip() for line in mapFile]
         max_width = max(map(len, level_map))
-        return list(map(lambda x: x.ljust(max_width, '.'), level_map))
+        level = list(map(lambda x: x.ljust(max_width, '.'), level_map))
+        level = ([('#' * (len(level[0]) + 30))] * 15 + [('#' * 15) + i + ('#' * 15) for i in level] +
+                 [('#' * (len(level[0]) + 30))] * 15)
+        return level
+
+    def wall(self, level, x, y):
+        res = ['.' * (len(level[0]) + 2)] + ['.' + i + '.' for i in level] + ['.' * (len(level[0]) + 2)]
+        s8, s6, s2, s4, s7, s9, s3, s1 = (res[y][x + 1], res[y + 1][x + 2], res[y + 2][x + 1], res[y + 1][x],
+                                          res[y][x], res[y][x + 2], res[y + 2][x + 2], res[y + 2][x])
+        s8, s6, s2, s4, s7, s9, s3, s1 = (s8 == '#', s6 == '#', s2 == '#', s4 == '#',
+                                          s7 == '#', s9 == '#', s3 == '#', s1 == '#')
+        if not (s8 or s6 or s2 or s4):  # 0
+            return 0, 0
+        elif not (s8 or s6 or s4) and s2:  # 1
+            return 1, 0
+        elif not (s8 or s6 or s2) and s4:
+            return 1, -90
+        elif not (s4 or s2 or s6) and s8:
+            return 1, 180
+        elif not (s8 or s4 or s2) and s6:
+            return 1, 90
+        elif not (s4 or s2) and s8 and s9 and s6:  # 2
+            return 2, 0
+        elif not (s4 or s8) and s6 and s3 and s2:
+            return 2, -90
+        elif not (s8 or s6) and s2 and s1 and s4:
+            return 2, 180
+        elif not (s6 or s2) and s4 and s7 and s8:
+            return 2, 90
+        elif not (s4 or s2 or s9) and s8 and s6:  # 3
+            return 3, 0
+        elif not (s4 or s8 or s3) and s6 and s2:
+            return 3, -90
+        elif not (s8 or s6 or s1) and s2 and s4:
+            return 3, 180
+        elif not (s6 or s2 or s7) and s4 and s8:
+            return 3, 90
+        elif not (s4 or s6) and s8 and s2:  # 4
+            return 4, 0
+        elif not (s8 or s2) and s4 and s6:
+            return 4, 90
+        elif not (s4 or s9) and s8 and s6 and s3 and s2:  # 5
+            return 5, 0
+        elif not (s8 or s3) and s6 and s2 and s1 and s4:
+            return 5, -90
+        elif not (s6 or s2) and s2 and s4 and s7 and s8:
+            return 5, 180
+        elif not (s2 or s4) and s4 and s8 and s9 and s6:
+            return 5, 90
+        elif not (s4 or s3) and s8 and s6 and s9 and s2:  # 6
+            return 6, 0
+        elif not (s8 or s1) and s6 and s2 and s3 and s4:
+            return 6, -90
+        elif not (s6 or s7) and s2 and s4 and s2 and s8:
+            return 6, 180
+        elif not (s2 or s9) and s4 and s8 and s4 and s6:
+            return 6, 90
+        elif not (s4 or s9 or s3) and s8 and s6 and s2:  # 7
+            return 7, 0
+        elif not (s8 or s3 or s1) and s6 and s2 and s4:
+            return 7, -90
+        elif not (s6 or s2 or s7) and s2 and s4 and s8:
+            return 7, 180
+        elif not (s2 or s4 or s9) and s4 and s8 and s6:
+            return 7, 90
+        elif not s4 and s9 and s8 and s6 and s3 and s2:  # 8
+            return 8, 0
+        elif not s8 and s3 and s6 and s2 and s1 and s4:
+            return 8, -90
+        elif not s6 and s2 and s2 and s4 and s7 and s8:
+            return 8, 180
+        elif not s2 and s4 and s4 and s8 and s9 and s6:
+            return 8, 90
+        elif s7 and s8 and not s9 and s6 and s3 and s2 and s1 and s4:  # 9
+            return 9, 0
+        elif s7 and s8 and s9 and s6 and not s3 and s2 and s1 and s4:
+            return 9, -90
+        elif s7 and s8 and s9 and s6 and s3 and s2 and not s1 and s4:
+            return 9, 180
+        elif not s7 and s8 and s9 and s6 and s3 and s2 and s1 and s4:
+            return 9, 90
+        elif s7 and s8 and not s9 and s6 and not s3 and s2 and s1 and s4:  # 10
+            return 10, 0
+        elif s7 and s8 and s9 and s6 and not s3 and s2 and not s1 and s4:
+            return 10, -90
+        elif not s7 and s8 and s9 and s6 and s3 and s2 and not s1 and s4:
+            return 10, 180
+        elif not s7 and s8 and not s9 and s6 and s3 and s2 and s1 and s4:
+            return 10, 90
+        elif not (s7 or s3) and s8 and s9 and s6 and s2 and s1 and s4:  # 11
+            return 11, 0
+        elif not (s9 or s1) and s7 and s8 and s6 and s3 and s2 and s4:
+            return 11, 90
+        elif not (s7 or s9 or s3) and s8 and s6 and s2 and s1 and s4:  # 12
+            return 12, 0
+        elif not (s9 or s3 or s1) and s6 and s2 and s4 and s7 and s8:
+            return 12, -90
+        elif not (s3 or s1 or s7) and s2 and s4 and s8 and s9 and s6:
+            return 12, 180
+        elif not (s1 or s7 or s9) and s4 and s8 and s6 and s3 and s2:
+            return 12, 90
+        elif s7 and s8 and s9 and s6 and s3 and s2 and s1 and s4:  # 13
+            return 13, 0
+        elif not (s7 or s9 or s3 or s1) and s8 and s6 and s2 and s4:  # 14
+            return 14, 0
+        else:
+            return 15, 0  # 15
+
 
     def generate_level(self, level):
         """генерация уровня из level, тут заполняются self.objects и self.moving_objects,
@@ -301,13 +410,14 @@ class GameLevel:
                     Tile(x, y, self.tiles_grp, self.all_grp, self.tile_size[0], self.tile_size[1],
                          empty_image, 4, 4, name='empty', frame=random.randint(0, 15))
                 elif level[y][x] == '#':  # стена
+                    kk = self.wall(level, x, y)
                     Tile(x, y, self.tiles_grp, self.all_grp, self.tile_size[0], self.tile_size[1],
-                         wall_image, 1, 1, name='wall')
+                         wall_image, 4, 4, name='wall', frame=kk[0], deg=kk[1])
                 elif level[y][x] == '@':  # игрок
                     Tile(x, y, self.tiles_grp, self.all_grp, self.tile_size[0], self.tile_size[1],
                          empty_image, 4, 4, name='empty', frame=random.randint(0, 15))  # создание пустой клетки
                     new_player = Player(x, y, self.player_grp, self.all_grp, self.tile_size[0], self.tile_size[1],
-                                        player_image, 4, 1, self.objects, self.level, self.camera,
+                                        player_image, 1, 1, self.objects, self.level, self.camera,
                                         self.camera_move_list, self.past_objects)  # создание игрока
                     self.objects[y][x] = new_player
                 elif level[y][x] == '>':  # стена, двигающаяся по горизонтали

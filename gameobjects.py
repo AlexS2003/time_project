@@ -21,6 +21,7 @@ class GameObject(pygame.sprite.Sprite):
         self.sheet = sheet
         self.frames = list()
         self.cut_sheet()
+        self.deg = 0
         self.set_image(0)
 
     def cut_sheet(self):
@@ -37,15 +38,17 @@ class GameObject(pygame.sprite.Sprite):
         """возвращает кортеж координат"""
         return (self.x, self.y)
 
-    def set_image(self, n):
+    def set_image(self, n, deg=0):
         """установить фрейм с номером n"""
+        self.deg = deg
         self.n_frame = n
         self.image = self.frames[n]
+        self.image = pygame.transform.rotate(self.image, deg)
         self.rect = self.image.get_rect().move(self.width * self.x, self.height * self.y)
 
     def get_data(self):
         """возвращает данные о себе - имя, номер фрейма, количество стлобцов у фрейма"""
-        return (self.get_name(), self.n_frame, self.cols)
+        return (self.get_name(), self.n_frame, self.cols, self.deg)
 
 
 class GameObjectMoving(GameObject):
@@ -92,10 +95,10 @@ class GameObjectMoving(GameObject):
 
 class Tile(GameObject):
     """статичный объект(пустая клетка или стена)"""
-    def __init__(self, x, y, grp1, grp2, width, height, sheet, cols, rows, name='tile', frame=0):
+    def __init__(self, x, y, grp1, grp2, width, height, sheet, cols, rows, name='tile', frame=0, deg=0):
         super().__init__(x, y, grp1, grp2, width, height, sheet, cols, rows)
         self.name = name
-        self.set_image(frame)
+        self.set_image(frame, deg=deg)
 
     def get_name(self):
         """возвращает имя"""
@@ -122,13 +125,13 @@ class Player(GameObjectMoving):
 
     def move(self, x, y):
         """движение"""
-        # при разных типах движения меняется фрейм
+        # при разных типах движения меняется фреймz
         if x == 1:
-            self.set_image(1)
+            self.set_image(0, deg=-90)
         elif x == -1:
-            self.set_image(3)
+            self.set_image(0, deg=90)
         elif y == 1:
-            self.set_image(2)
+            self.set_image(0, deg=180)
         elif y == -1:
             self.set_image(0)
         if self.time_machine.is_past():
