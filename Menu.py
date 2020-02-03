@@ -12,7 +12,7 @@ screen = pygame.display.set_mode(size)  # , pygame.FULLSCREEN)
 
 
 def load_image(name, colorkey=None):
-    fullname = os.path.join('data\images', name)
+    fullname = os.path.join('data/', name)
     image = pygame.image.load(fullname).convert()
     if colorkey is not None:
         if colorkey == -1:
@@ -93,11 +93,11 @@ def proverka():
 
 menu = Menu(width, height)
 all_sprites = pygame.sprite.Group()
-menu.draw_start("knopka_start.jpg")
-menu.draw_settings("knopka_help.jpg")
-menu.draw_rules("knopka_gamerules.jpg")
-menu.draw_info("knopka_sing_in.jpg")
-menu.draw_exit("knopka_finish.jpg")
+menu.draw_start("buttons/play.png")
+menu.draw_settings("buttons/help.png")
+menu.draw_rules("buttons/rules.png")
+menu.draw_info("buttons/singin.png")
+menu.draw_exit("buttons/exit.png")
 running = True
 while running:
     for event in pygame.event.get():
