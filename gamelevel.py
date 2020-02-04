@@ -18,15 +18,15 @@ def load_image(filename, color_key=None):
     return image
 
 
-#user32 = ctypes.windll.user32
-#user32.SetProcessDPIAware()
-#screen_size = (user32.GetSystemMetrics(0), user32.GetSystemMetrics(1))
+user32 = ctypes.windll.user32
+user32.SetProcessDPIAware()
+screen_size = (user32.GetSystemMetrics(0), user32.GetSystemMetrics(1))
 screen_size = (1280, 720)
 
 
 pygame.init()
 size = WIDTH, HEIGHT = screen_size
-screen = pygame.display.set_mode(size)  #, pygame.FULLSCREEN)
+screen = pygame.display.set_mode(size, pygame.FULLSCREEN)
 black = pygame.Color('black')
 screen.fill(black)
 
