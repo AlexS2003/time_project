@@ -1,14 +1,14 @@
 import pygame
 import os
-import ctypes
+# import ctypes
 
-user32 = ctypes.windll.user32
-user32.SetProcessDPIAware()
-screen_size = (user32.GetSystemMetrics(0), user32.GetSystemMetrics(1))
-# screen_size = (1280, 720)
+#user32 = ctypes.windll.user32
+#user32.SetProcessDPIAware()
+#screen_size = (user32.GetSystemMetrics(0), user32.GetSystemMetrics(1))
+screen_size = (1280, 720)
 pygame.init()
 size = WIDTH, HEIGHT = screen_size
-screen = pygame.display.set_mode(size, pygame.FULLSCREEN)
+screen = pygame.display.set_mode(size)  # , pygame.FULLSCREEN)
 
 
 def load_image(name, colorkey=None):
@@ -45,59 +45,36 @@ class AnimatedSprite(pygame.sprite.Sprite):
         self.cur_frame = (self.cur_frame + 1) % len(self.frames)
         self.image = self.frames[self.cur_frame]
 
-
-class Menu:
-    def __init__(self, width, height):
-        self.width = width
-        self.height = height
-
-    def draw_start(self, name):
-        sprite = AnimatedSprite(load_image(name), 1, 3, self.width / 2, self.height / 10 * 3)
-        all_sprites.add(sprite)
-
-    def draw_info(self, name):
-        sprite = AnimatedSprite(load_image(name), 1, 3, self.width / 2, self.height / 10 * 4)
-        all_sprites.add(sprite)
-
-    def draw_rules(self, name):
-        sprite = AnimatedSprite(load_image(name), 1, 3, self.width / 2, self.height / 10 * 5)
-        all_sprites.add(sprite)
-
-    def draw_settings(self, name):
-        sprite = AnimatedSprite(load_image(name), 1, 3, self.width / 2, self.height / 10 * 6)
-        all_sprites.add(sprite)
-
-    def draw_exit(self, name):
-        sprite = AnimatedSprite(load_image(name), 1, 3, self.width / 2, self.height / 10 * 7)
-        all_sprites.add(sprite)
+all_sprites = pygame.sprite.Group()
+sprite_1 = AnimatedSprite(load_image("buttons/play_btn.png"), 1, 3, size[0] // 2, size[1] / 10 * 3)
+all_sprites.add(sprite_1)
+sprite_2 = AnimatedSprite(load_image("buttons/about_developers_btn.png"), 1, 3, size[0] // 2, size[1] / 10 * 4)
+all_sprites.add(sprite_2)
+sprite_3 = AnimatedSprite(load_image("buttons/rules.png"), 1, 3, size[0] // 2, size[1] / 10 * 5)
+all_sprites.add(sprite_3)
+sprite_4 = AnimatedSprite(load_image("buttons/singin.png"), 1, 3, size[0] // 2, size[1] / 10 * 6)
+all_sprites.add(sprite_4)
+sprite_5 = AnimatedSprite(load_image("buttons/exit_btn.png"), 1, 3, size[0] // 2, size[1] / 10 * 7)
+all_sprites.add(sprite_5)
+f1, f2, f3, f4, f5 = 0, 0, 0, 0, 0
+fon = pygame.transform.scale(load_image('buttons/background.png'), (size[0], size[1]))
+screen.blit(fon, (0, 0))
 
 
 def proverka():
-    if size[0] / 2 - 100 <= cor[0] <= size[0] / 2 + 100 and size[1] / 10 * 3 - 25 <= cor[1] <= size[1] / 10 * 3 + 25:
-        # sprite = AnimatedSprite(load_image("buttons/play_btn.png"), 1, 3, size[0] / 2, size[1] / 10 * 3)
-        for i in all_sprites:
-            if i == AnimatedSprite(load_image("buttons/play_btn.png"), 1, 3, size[0] / 2, size[1] / 10 * 3):
-                i.update()
-        # all_sprites.add(sprite)
-    if size[0] / 2 - 100 <= cor[0] <= size[0] / 2 + 100 and size[1] / 10 * 4 - 25 <= cor[1] <= size[1] / 10 * 4 + 25:
-        AnimatedSprite(load_image("buttons/about_developers_btn.png"), 1, 3, size[0] / 2, size[1] / 10 * 4).update()
-    if size[0] / 2 - 100 <= cor[0] <= size[0] / 2 + 100 and size[1] / 10 * 5 - 25 <= cor[1] <= size[1] / 10 * 5 + 25:
-        AnimatedSprite(load_image("buttons/rules.png"), 1, 3, size[0] / 2, size[1] / 10 * 5).update()
-    if size[0] / 2 - 100 <= cor[0] <= size[0] / 2 + 100 and size[1] / 10 * 6 - 25 <= cor[1] <= size[1] / 10 * 6 + 25:
-        AnimatedSprite(load_image("buttons/singin.png"), 1, 3, size[0] / 2, size[1] / 10 * 6).update()
-    if size[0] / 2 - 100 <= cor[0] <= size[0] / 2 + 100 and size[1] / 10 * 7 - 25 <= cor[1] <= size[1] / 10 * 7 + 25:
-        AnimatedSprite(load_image("buttons/exit_btn.png"), 1, 3, size[0] / 2, size[1] / 10 * 7).update()
+    if size[0] // 2 - 100 <= cor[0] <= size[0] // 2 + 100 and size[1] / 10 * 3 - 25 <= cor[1] <= size[1] / 10 * 3 + 25:
+        return 1
+    if size[0] // 2 - 100 <= cor[0] <= size[0] // 2 + 100 and size[1] / 10 * 4 - 25 <= cor[1] <= size[1] / 10 * 4 + 25:
+        return 2
+    if size[0] // 2 - 100 <= cor[0] <= size[0] // 2 + 100 and size[1] / 10 * 5 - 25 <= cor[1] <= size[1] / 10 * 5 + 25:
+        return 3
+    if size[0] // 2 - 100 <= cor[0] <= size[0] // 2 + 100 and size[1] / 10 * 6 - 25 <= cor[1] <= size[1] / 10 * 6 + 25:
+        return 4
+    if size[0] // 2 - 100 <= cor[0] <= size[0] // 2 + 100 and size[1] / 10 * 7 - 25 <= cor[1] <= size[1] / 10 * 7 + 25:
+        return 5
+    return 0
 
 
-menu = Menu(size[0], size[1])
-all_sprites = pygame.sprite.Group()
-menu.draw_start("buttons/play_btn.png")
-menu.draw_info("buttons/about_developers_btn.png")
-menu.draw_rules("buttons/rules.png")
-menu.draw_settings("buttons/singin.png")
-menu.draw_exit("buttons/exit_btn.png")
-fon = pygame.transform.scale(load_image('buttons/background.png'), (size[0], size[1]))
-screen.blit(fon, (0, 0))
 running = True
 while running:
     for event in pygame.event.get():
@@ -106,9 +83,53 @@ while running:
         all_sprites.draw(screen)
         if event.type == pygame.MOUSEMOTION:
             cor = event.pos
-            proverka()
+            a = proverka()
+            if a == 1:
+                if f1 == 0:
+                    f1 = 1
+                    sprite_1.update()
+            elif a == 2:
+                if f2 == 0:
+                    f2 = 1
+                    sprite_2.update()
+            elif a == 3:
+                if f3 == 0:
+                    f3 = 1
+                    sprite_3.update()
+            elif a == 4:
+                if f4 == 0:
+                    f4 = 1
+                    sprite_4.update()
+            elif a == 5:
+                if f5 == 0:
+                    f5 = 1
+                    sprite_5.update()
+            else:
+                all_sprites = pygame.sprite.Group()
+                sprite_1 = AnimatedSprite(load_image("buttons/play_btn.png"), 1, 3, size[0] // 2, size[1] / 10 * 3)
+                all_sprites.add(sprite_1)
+                sprite_2 = AnimatedSprite(load_image("buttons/about_developers_btn.png"), 1, 3, size[0] // 2,
+                                          size[1] / 10 * 4)
+                all_sprites.add(sprite_2)
+                sprite_3 = AnimatedSprite(load_image("buttons/rules.png"), 1, 3, size[0] // 2, size[1] / 10 * 5)
+                all_sprites.add(sprite_3)
+                sprite_4 = AnimatedSprite(load_image("buttons/singin.png"), 1, 3, size[0] // 2, size[1] / 10 * 6)
+                all_sprites.add(sprite_4)
+                sprite_5 = AnimatedSprite(load_image("buttons/exit_btn.png"), 1, 3, size[0] // 2, size[1] / 10 * 7)
+                all_sprites.add(sprite_5)
+                f1, f2, f3, f4, f5 = 0, 0, 0, 0, 0
         if event.type == pygame.MOUSEBUTTONDOWN:
             cor = event.pos
-            proverka()
+            a = proverka()
+            if a == 1:
+                sprite_1.update()
+            elif a == 2:
+                sprite_2.update()
+            elif a == 3:
+                sprite_3.update()
+            elif a == 4:
+                sprite_4.update()
+            elif a == 5:
+                sprite_5.update()
         pygame.display.flip()
 pygame.quit()
