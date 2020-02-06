@@ -7,6 +7,7 @@ import os
 #screen_size = (user32.GetSystemMetrics(0), user32.GetSystemMetrics(1))
 screen_size = (1280, 720)
 pygame.init()
+# ty
 size = WIDTH, HEIGHT = screen_size
 screen = pygame.display.set_mode(size)  # , pygame.FULLSCREEN)
 
