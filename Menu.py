@@ -1,15 +1,14 @@
 import pygame
 import os
-# import ctypes
+import ctypes
 
-#user32 = ctypes.windll.user32
-#user32.SetProcessDPIAware()
-#screen_size = (user32.GetSystemMetrics(0), user32.GetSystemMetrics(1))
-screen_size = (1280, 720)
+user32 = ctypes.windll.user32
+user32.SetProcessDPIAware()
+screen_size = (user32.GetSystemMetrics(0), user32.GetSystemMetrics(1))
+# screen_size = (1280, 720)
 pygame.init()
-# ty
 size = WIDTH, HEIGHT = screen_size
-screen = pygame.display.set_mode(size)  # , pygame.FULLSCREEN)
+screen = pygame.display.set_mode(size, pygame.FULLSCREEN)
 
 
 def load_image(name, colorkey=None):
@@ -104,10 +103,12 @@ while running:
             a = proverka()
             if a == 1:
                 sprite_1.update()
-
+                #  pygame.time.wait(10)
+                from menu_2 import *
             elif a == 2:
                 sprite_2.update()
             elif a == 3:
                 sprite_3.update()
+                pygame.quit()
         pygame.display.flip()
 pygame.quit()
