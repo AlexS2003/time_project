@@ -47,32 +47,24 @@ class AnimatedSprite(pygame.sprite.Sprite):
         self.image = self.frames[self.cur_frame]
 
 all_sprites = pygame.sprite.Group()
-sprite_1 = AnimatedSprite(load_image("buttons/play_btn.png"), 1, 3, size[0] // 2, size[1] / 10 * 3)
+sprite_1 = AnimatedSprite(load_image("buttons/play_btn.png"), 1, 3, size[0] // 2 - 100, size[1] / 10 * 4)
 all_sprites.add(sprite_1)
-sprite_2 = AnimatedSprite(load_image("buttons/about_developers_btn.png"), 1, 3, size[0] // 2, size[1] / 10 * 4)
+sprite_2 = AnimatedSprite(load_image("buttons/about_developers_btn.png"), 1, 3, size[0] // 2 - 100, size[1] / 10 * 5)
 all_sprites.add(sprite_2)
-sprite_3 = AnimatedSprite(load_image("buttons/rules.png"), 1, 3, size[0] // 2, size[1] / 10 * 5)
+sprite_3 = AnimatedSprite(load_image("buttons/exit_btn.png"), 1, 3, size[0] // 2 - 100, size[1] / 10 * 6)
 all_sprites.add(sprite_3)
-sprite_4 = AnimatedSprite(load_image("buttons/singin.png"), 1, 3, size[0] // 2, size[1] / 10 * 6)
-all_sprites.add(sprite_4)
-sprite_5 = AnimatedSprite(load_image("buttons/exit_btn.png"), 1, 3, size[0] // 2, size[1] / 10 * 7)
-all_sprites.add(sprite_5)
-f1, f2, f3, f4, f5 = 0, 0, 0, 0, 0
+f1, f2, f3 = 0, 0, 0
 fon = pygame.transform.scale(load_image('buttons/background.png'), (size[0], size[1]))
 screen.blit(fon, (0, 0))
 
 
 def proverka():
-    if size[0] // 2 - 100 <= cor[0] <= size[0] // 2 + 100 and size[1] / 10 * 3 - 25 <= cor[1] <= size[1] / 10 * 3 + 25:
-        return 1
     if size[0] // 2 - 100 <= cor[0] <= size[0] // 2 + 100 and size[1] / 10 * 4 - 25 <= cor[1] <= size[1] / 10 * 4 + 25:
-        return 2
+        return 1
     if size[0] // 2 - 100 <= cor[0] <= size[0] // 2 + 100 and size[1] / 10 * 5 - 25 <= cor[1] <= size[1] / 10 * 5 + 25:
-        return 3
+        return 2
     if size[0] // 2 - 100 <= cor[0] <= size[0] // 2 + 100 and size[1] / 10 * 6 - 25 <= cor[1] <= size[1] / 10 * 6 + 25:
-        return 4
-    if size[0] // 2 - 100 <= cor[0] <= size[0] // 2 + 100 and size[1] / 10 * 7 - 25 <= cor[1] <= size[1] / 10 * 7 + 25:
-        return 5
+        return 3
     return 0
 
 
@@ -97,40 +89,25 @@ while running:
                 if f3 == 0:
                     f3 = 1
                     sprite_3.update()
-            elif a == 4:
-                if f4 == 0:
-                    f4 = 1
-                    sprite_4.update()
-            elif a == 5:
-                if f5 == 0:
-                    f5 = 1
-                    sprite_5.update()
             else:
                 all_sprites = pygame.sprite.Group()
-                sprite_1 = AnimatedSprite(load_image("buttons/play_btn.png"), 1, 3, size[0] // 2, size[1] / 10 * 3)
+                sprite_1 = AnimatedSprite(load_image("buttons/play_btn.png"), 1, 3, size[0] // 2 - 100, size[1] / 10 * 4)
                 all_sprites.add(sprite_1)
-                sprite_2 = AnimatedSprite(load_image("buttons/about_developers_btn.png"), 1, 3, size[0] // 2,
-                                          size[1] / 10 * 4)
+                sprite_2 = AnimatedSprite(load_image("buttons/about_developers_btn.png"), 1, 3, size[0] // 2 - 100,
+                                          size[1] / 10 * 5)
                 all_sprites.add(sprite_2)
-                sprite_3 = AnimatedSprite(load_image("buttons/rules.png"), 1, 3, size[0] // 2, size[1] / 10 * 5)
+                sprite_3 = AnimatedSprite(load_image("buttons/exit_btn.png"), 1, 3, size[0] // 2 - 100, size[1] / 10 * 6)
                 all_sprites.add(sprite_3)
-                sprite_4 = AnimatedSprite(load_image("buttons/singin.png"), 1, 3, size[0] // 2, size[1] / 10 * 6)
-                all_sprites.add(sprite_4)
-                sprite_5 = AnimatedSprite(load_image("buttons/exit_btn.png"), 1, 3, size[0] // 2, size[1] / 10 * 7)
-                all_sprites.add(sprite_5)
-                f1, f2, f3, f4, f5 = 0, 0, 0, 0, 0
+                f1, f2, f3 = 0, 0, 0
         if event.type == pygame.MOUSEBUTTONDOWN:
             cor = event.pos
             a = proverka()
             if a == 1:
                 sprite_1.update()
+
             elif a == 2:
                 sprite_2.update()
             elif a == 3:
                 sprite_3.update()
-            elif a == 4:
-                sprite_4.update()
-            elif a == 5:
-                sprite_5.update()
         pygame.display.flip()
 pygame.quit()
