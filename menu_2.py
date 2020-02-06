@@ -23,7 +23,7 @@ def load_image(name, colorkey=None):
     return image
 
 
-class AnimatedSprite(pygame.sprite.Sprite):
+class AnimatedSprite(pygame.sprite.Sprite):  # класс анимации кнопок
     def __init__(self, sheet, columns, rows, x, y):
         super().__init__(all_sprites)
         self.frames = []
@@ -46,7 +46,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
         self.image = self.frames[self.cur_frame]
 
 
-all_sprites = pygame.sprite.Group()
+all_sprites = pygame.sprite.Group()  # создаем группу спрайтов и подгружаем кнопки
 sprite_1 = AnimatedSprite(load_image("buttons/level1_btn.png"), 1, 3, size[0] // 2 - 100, size[1] / 10 * 3)
 all_sprites.add(sprite_1)
 sprite_2 = AnimatedSprite(load_image("buttons/level2_btn.png"), 1, 3, size[0] // 2 - 100, size[1] / 10 * 4)
@@ -57,11 +57,11 @@ sprite_4 = AnimatedSprite(load_image("buttons/level4_btn.png"), 1, 3, size[0] //
 all_sprites.add(sprite_4)
 sprite_5 = AnimatedSprite(load_image("buttons/level5_btn.png"), 1, 3, size[0] // 2 - 100, size[1] / 10 * 7)
 all_sprites.add(sprite_5)
-f1, f2, f3, f4, f5 = 0, 0, 0, 0, 0
+f1, f2, f3, f4, f5 = 0, 0, 0, 0, 0  # флаги для кнопок
 fon = pygame.transform.scale(load_image('buttons/background.png'), (size[0], size[1]))
-screen.blit(fon, (0, 0))
+screen.blit(fon, (0, 0))  # создаем фон
 
-def proverka():
+def proverka():  # проверяем, где сейчас находится мышка
     if size[0] // 2 - 100 <= cor[0] <= size[0] // 2 + 100 and size[1] / 10 * 3 - 25 <= cor[1] <= size[1] / 10 * 3 + 25:
         return 1
     if size[0] // 2 - 100 <= cor[0] <= size[0] // 2 + 100 and size[1] / 10 * 4 - 25 <= cor[1] <= size[1] / 10 * 4 + 25:
@@ -87,7 +87,7 @@ while running:
             if a == 1:
                 if f1 == 0:
                     f1 = 1
-                    sprite_1.update()
+                    sprite_1.update()  # если на кнопке уровень, то меняем цвет
             elif a == 2:
                 if f2 == 0:
                     f2 = 1
@@ -104,7 +104,7 @@ while running:
                 if f5 == 0:
                     f5 = 1
                     sprite_5.update()
-            else:
+            else:  # если нет, то меняем обратно
                 all_sprites = pygame.sprite.Group()
                 sprite_1 = AnimatedSprite(load_image("buttons/level1_btn.png"), 1, 3, size[0] // 2 - 100, size[1] / 10 * 3)
                 all_sprites.add(sprite_1)
@@ -122,7 +122,7 @@ while running:
             a = proverka()
             if a == 1:
                 sprite_1.update()
-                from main import *
+                from main import *  # если выбрали уровень, то открываем его
                 level1()
             elif a == 2:
                 sprite_2.update()

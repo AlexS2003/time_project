@@ -1,7 +1,7 @@
 from gamelevel import *
 
 
-def level1():
+def level1():  # если уровень 1, то открываем его
     gl = GameLevel('data/levels/map.txt')
     gl.play()
 

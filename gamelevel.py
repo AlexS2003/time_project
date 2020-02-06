@@ -21,7 +21,7 @@ def load_image(filename, color_key=None):
 user32 = ctypes.windll.user32
 user32.SetProcessDPIAware()
 screen_size = (user32.GetSystemMetrics(0), user32.GetSystemMetrics(1))
-screen_size = (1280, 720)
+#screen_size = (1280, 720)
 
 
 pygame.init()
