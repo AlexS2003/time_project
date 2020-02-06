@@ -57,7 +57,9 @@ sprite_4 = AnimatedSprite(load_image("buttons/level4_btn.png"), 1, 3, size[0] //
 all_sprites.add(sprite_4)
 sprite_5 = AnimatedSprite(load_image("buttons/level5_btn.png"), 1, 3, size[0] // 2 - 100, size[1] / 10 * 7)
 all_sprites.add(sprite_5)
-f1, f2, f3, f4, f5 = 0, 0, 0, 0, 0  # флаги для кнопок
+sprite_6 = AnimatedSprite(load_image("buttons/back_btn.png"), 1, 3, size[0] // 2 - 100, size[1] / 10 * 8)
+all_sprites.add(sprite_6)
+f1, f2, f3, f4, f5, f6 = 0, 0, 0, 0, 0, 0  # флаги для кнопок
 fon = pygame.transform.scale(load_image('buttons/background.png'), (size[0], size[1]))
 screen.blit(fon, (0, 0))  # создаем фон
 
@@ -72,6 +74,8 @@ def proverka():  # проверяем, где сейчас находится м
         return 4
     if size[0] // 2 - 100 <= cor[0] <= size[0] // 2 + 100 and size[1] / 10 * 7 - 25 <= cor[1] <= size[1] / 10 * 7 + 25:
         return 5
+    if size[0] // 2 - 100 <= cor[0] <= size[0] // 2 + 100 and size[1] / 10 * 8 - 25 <= cor[1] <= size[1] / 10 * 8 + 25:
+        return 6
     return 0
 
 
@@ -104,6 +108,10 @@ while running:
                 if f5 == 0:
                     f5 = 1
                     sprite_5.update()
+            elif a == 6:
+                if f6 == 0:
+                    f6 = 1
+                    sprite_6.update()
             else:  # если нет, то меняем обратно
                 all_sprites = pygame.sprite.Group()
                 sprite_1 = AnimatedSprite(load_image("buttons/level1_btn.png"), 1, 3, size[0] // 2 - 100, size[1] / 10 * 3)
@@ -116,7 +124,10 @@ while running:
                 all_sprites.add(sprite_4)
                 sprite_5 = AnimatedSprite(load_image("buttons/level5_btn.png"), 1, 3, size[0] // 2 - 100, size[1] / 10 * 7)
                 all_sprites.add(sprite_5)
-                f1, f2, f3, f4, f5 = 0, 0, 0, 0, 0
+                sprite_6 = AnimatedSprite(load_image("buttons/back_btn.png"), 1, 3, size[0] // 2 - 100,
+                                          size[1] / 10 * 8)
+                all_sprites.add(sprite_6)
+                f1, f2, f3, f4, f5, f6 = 0, 0, 0, 0, 0, 0
         if event.type == pygame.MOUSEBUTTONDOWN:
             cor = event.pos
             a = proverka()
@@ -140,5 +151,8 @@ while running:
                 sprite_5.update()
                 from main import *
                 level5()
+            elif a == 6:
+                sprite_6.update()
+                from Menu import *
         pygame.display.flip()
 pygame.quit()
