@@ -10,7 +10,6 @@ pygame.init()
 size = WIDTH, HEIGHT = screen_size
 screen = pygame.display.set_mode(size, pygame.FULLSCREEN)
 
-
 def load_image(name, colorkey=None):
     fullname = os.path.join('data/', name)
     image = pygame.image.load(fullname).convert()
@@ -45,27 +44,26 @@ class AnimatedSprite(pygame.sprite.Sprite):  # класс для анимаци�
         self.cur_frame = (self.cur_frame + 1) % len(self.frames)
         self.image = self.frames[self.cur_frame]
 
-all_sprites = pygame.sprite.Group()  # создаем группу спрайтов и подгружаем все картинки
-sprite_1 = AnimatedSprite(load_image("buttons/play_btn.png"), 1, 3, size[0] // 2 - 100, size[1] / 10 * 4)
+
+all_sprites = pygame.sprite.Group()
+sprite = pygame.sprite.Sprite()
+sprite.image = load_image("buttons/developers_btn.png")
+sprite.rect = sprite.image.get_rect()
+sprite.rect.x = size[0] / 2 - 100
+sprite.rect.y = size[1] / 10 * 4
+all_sprites.add(sprite)
+
+sprite_1 = AnimatedSprite(load_image("buttons/back_btn.png"), 1, 3, size[0] // 2 - 100, size[1] / 10 * 7)
 all_sprites.add(sprite_1)
-sprite_2 = AnimatedSprite(load_image("buttons/about_developers_btn.png"), 1, 3, size[0] // 2 - 100, size[1] / 10 * 5)
-all_sprites.add(sprite_2)
-sprite_3 = AnimatedSprite(load_image("buttons/exit_btn.png"), 1, 3, size[0] // 2 - 100, size[1] / 10 * 6)
-all_sprites.add(sprite_3)
-f1, f2, f3 = 0, 0, 0  # флаги для кнопок
+f1 = 0
 fon = pygame.transform.scale(load_image('buttons/background.png'), (size[0], size[1]))
 screen.blit(fon, (0, 0))  # делаем фон
 
 
 def proverka():  # функция, чтобы проверять, где  сейчас мышка
-    if size[0] // 2 - 100 <= cor[0] <= size[0] // 2 + 100 and size[1] / 10 * 4 - 25 <= cor[1] <= size[1] / 10 * 4 + 25:
+    if size[0] // 2 - 100 <= cor[0] <= size[0] // 2 + 100 and size[1] / 10 * 7 - 25 <= cor[1] <= size[1] / 10 * 7 + 25:
         return 1
-    if size[0] // 2 - 100 <= cor[0] <= size[0] // 2 + 100 and size[1] / 10 * 5 - 25 <= cor[1] <= size[1] / 10 * 5 + 25:
-        return 2
-    if size[0] // 2 - 100 <= cor[0] <= size[0] // 2 + 100 and size[1] / 10 * 6 - 25 <= cor[1] <= size[1] / 10 * 6 + 25:
-        return 3
     return 0
-
 
 running = True
 while running:
@@ -80,35 +78,16 @@ while running:
                 if f1 == 0:
                     f1 = 1
                     sprite_1.update()  # если мышка на кнопке, то меняем цвет
-            elif a == 2:
-                if f2 == 0:
-                    f2 = 1
-                    sprite_2.update()
-            elif a == 3:
-                if f3 == 0:
-                    f3 = 1
-                    sprite_3.update()
             else:  # если нет, то меняем обратно
                 all_sprites = pygame.sprite.Group()
-                sprite_1 = AnimatedSprite(load_image("buttons/play_btn.png"), 1, 3, size[0] // 2 - 100, size[1] / 10 * 4)
+                sprite_1 = AnimatedSprite(load_image("buttons/back_btn.png"), 1, 3, size[0] // 2 - 100, size[1] / 10 * 7)
                 all_sprites.add(sprite_1)
-                sprite_2 = AnimatedSprite(load_image("buttons/about_developers_btn.png"), 1, 3, size[0] // 2 - 100,
-                                          size[1] / 10 * 5)
-                all_sprites.add(sprite_2)
-                sprite_3 = AnimatedSprite(load_image("buttons/exit_btn.png"), 1, 3, size[0] // 2 - 100, size[1] / 10 * 6)
-                all_sprites.add(sprite_3)
-                f1, f2, f3 = 0, 0, 0
+                f1 = 0
         if event.type == pygame.MOUSEBUTTONDOWN:
             cor = event.pos
             a = proverka()
             if a == 1:
                 sprite_1.update()
-                from menu_2 import *  # если мы нажали играть, то открываем новое окно с выбором уровня
-            elif a == 2:
-                sprite_2.update()
-                from developers import *
-            elif a == 3:
-                sprite_3.update()
-                pygame.quit()  # если нажали выход, то закрываем программу
+                from Menu import *  # если мы нажали играть, то открываем новое окно с выбором уровня
         pygame.display.flip()
 pygame.quit()
